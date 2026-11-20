@@ -68,7 +68,6 @@ def ask_llm(prompt):
 def weekly_summary(tickets):
     return ask_llm(build_prompt(tickets))
 
-
 if __name__ == "__main__":
     from jira_data import load_tickets
     from metrics import add_durations
