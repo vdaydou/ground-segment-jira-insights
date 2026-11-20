@@ -51,12 +51,18 @@ def ask_llm(prompt):
         json={
             "system_instruction": {"parts": [{"text": INSTRUCTIONS}]},
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": 0.2},  # low = factual and stable, high = creative
+            "generationConfig": {"temperature": 0.2,        # low = factual and stable
+            "maxOutputTokens": 2048},  # enough room for the whole summary
         },
         timeout=120,
     )
     response.raise_for_status()
-    return response.json()["candidates"][0]["content"]["parts"][0]["text"]
+    candidate = response.json()["candidates"][0]
+    # Gemini may split its answer into several parts: join them all
+    text = "".join(part.get("text", "") for part in candidate["content"]["parts"])
+    if candidate.get("finishReason") not in (None, "STOP"):
+        text += f"\n\n*(The model stopped early: {candidate['finishReason']}.)*"
+    return text
 
 
 def weekly_summary(tickets):
