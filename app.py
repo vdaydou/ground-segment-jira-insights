@@ -26,6 +26,7 @@ def get_tickets():
 st.title("🛰️ Ground Segment Jira Insights")
 st.caption("Process indicators for a fictional satellite ground segment, read live from Jira. "
            "All data is invented; this project is not affiliated with ESA.")
+st.markdown("[View the code on GitHub](https://github.com/vdaydou/ground-segment-jira-insights)")
 if st.button("🔄 Refresh from Jira"):
     st.cache_data.clear()  # forget the stored data, read Jira again
 tickets = get_tickets()
